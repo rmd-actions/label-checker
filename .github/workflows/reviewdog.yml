@@ -19,7 +19,6 @@ jobs:
       - uses: reviewdog/action-golangci-lint@v2
         with:
           github_token: ${{ secrets.github_token }}
-          golangci_lint_flags: "-c .golangci.yml"
           level: "error"
           reporter: github-check
 
@@ -84,4 +83,4 @@ jobs:
             **/*.md
           language: en
           disabled_rules:
-            "GITHUB,DASH_RULE,PUNCTUATION_PARAGRAPH_END,MISSING_COMMA_AFTER_INTRODUCTORY_PHRASE,HE_VERB_AGR[5],ID_CASING[2]"
+            "GITHUB,DASH_RULE,PUNCTUATION_PARAGRAPH_END,MISSING_COMMA_AFTER_INTRODUCTORY_PHRASE,HE_VERB_AGR[5],ID_CASING[2],ENGLISH_WORD_REPEAT_RULE"

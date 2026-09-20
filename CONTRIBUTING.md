@@ -7,8 +7,7 @@ Firstly thanks for thinking of contributing - the project is [open source](https
 [How to make a contribution](#how-to-make-a-contribution)
 
 [Local development](#local-development)
-  * [Visual Studio Code](#visual-studio-code)
-  * [Codespaces](#codespaces)
+  * [Visual Studio Code and Codespaces](#visual-studio-code-and-codespaces)
   * [Local development from scratch](#local-development-from-scratch)
     * [Dependencies](#dependencies)
   * [Tools and technologies](#tools-and-technologies)
@@ -26,24 +25,43 @@ Firstly thanks for thinking of contributing - the project is [open source](https
   * [Create a pull request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests).  The project uses the _[fork and pull model](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/about-collaborative-development-models)_:
     * [Fork the project](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/working-with-forks)
     * Make your changes on your fork
-    * Write a [good commit message(s)](https://chris.beams.io/posts/git-commit/) for your changes
+    * Write commit messages that follow [the Chris Beams commit message conventions](https://cbea.ms/git-commit/):
+      1. [Separate the subject from the body with a blank line](https://cbea.ms/git-commit/#separate).
+      2. [Limit the subject line to 50 characters](https://cbea.ms/git-commit/#limit-50).
+      3. [Capitalize the subject line](https://cbea.ms/git-commit/#capitalize).
+      4. [Do not end the subject line with a period](https://cbea.ms/git-commit/#end).
+      5. [Use the imperative mood in the subject line](https://cbea.ms/git-commit/#imperative).
+      6. [Wrap the body at 72 characters](https://cbea.ms/git-commit/#wrap-72).
+      7. [Use the body to explain what and why versus how](https://cbea.ms/git-commit/#why-not-how).
+      * When a commit pertains to an issue, which it generally will, use this body: `Read #<issue-number> for context.`
+      * Do not apply convention 7 when using this issue-reference body, because the issue provides the what and why context.
     * [Create the pull request for your changes](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/proposing-changes-to-your-work-with-pull-requests)
       * [Update the tests or add new tests](#running-the-tests) to cover the new behaviour.
 
 ## Local development
 
-### Visual Studio Code
+### Visual Studio Code and Codespaces
 
-The easiest way to set up your development environment (unless you have [Codespaces](#codespaces), which is even easier) is to use [Visual Studio Code](https://code.visualstudio.com/)'s [Remote Containers](https://code.visualstudio.com/docs/remote/containers) functionality:
-  * [System requirements](https://code.visualstudio.com/docs/remote/containers#_system-requirements)
-  * [Fork the project](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/working-with-forks) 
-  * [Open the local project folder in a container](https://code.visualstudio.com/docs/remote/containers#_quick-start-open-an-existing-folder-in-a-container)
-  * Everything will then be setup for you.  You'll be able to run the tests locally.
+The repository does not currently provide a custom development container. This is
+an interim arrangement while the project is migrated from Go to TypeScript.
+After that migration, we can reassess whether a custom development environment
+provides sufficient value.
 
-### Codespaces
+For local development, install [Visual Studio Code](https://code.visualstudio.com/)
+and clone or [fork the project](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/working-with-forks).
+For remote development, [GitHub Codespaces](https://github.com/features/codespaces/)
+uses its default environment when you open the repository; no custom
+devcontainer configuration is used.
 
-If you have access to [GitHub Codespaces](https://github.com/features/codespaces/) (which allows full remote
-development from within your browser) then all you need to do is [fork the project](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/working-with-forks) and open it in Codespaces - easy!
+In either environment, install the dependencies and tools listed below manually:
+
+* [Go](https://golang.org/)
+* [Hoverfly](https://hoverfly.readthedocs.io) (required for
+  [running the tests](#running-the-tests))
+
+See [Local development from scratch](#local-development-from-scratch) for the
+Hoverfly installation steps and [Running the tests](#running-the-tests) for the
+commands to verify the setup.
 
 ### Local development from scratch
 
@@ -91,6 +109,13 @@ works properly on [GitHub Enterprise Server](https://docs.github.com/en/enterpri
 The tests are [table driven](https://dave.cheney.net/2019/05/07/prefer-table-driven-tests), which is an important concept to know when amending them.
 
 The tests also have an integration mode which makes calls to real external services instead of using Hoverfly to virtualise the service calls.  You do not need to run the tests in integration mode when contributing (they will not pass unless you are a [maintainer](.github/CODEOWNERS) of the project who has the designated GitHub permissions).
+
+If you are a maintainer, and want to run the TypeScript integration test
+locally, set either `GITHUB_TOKEN` or `GH_TOKEN` when running the npm script:
+
+`GITHUB_TOKEN=<token> npm run test:integration`
+
+Alternatively, use `GH_TOKEN=<token> npm run test:integration`.
 
 If you are a maintainer, and you want to run the integration tests locally, you will need to set the `INPUT_REPO_TOKEN` environment variable, e.g. if using a VS Code Codespace you can run: 
 
