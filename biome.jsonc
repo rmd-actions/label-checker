@@ -1,0 +1,145 @@
+{
+	"assist": {
+		"actions": {
+			"source": {
+				// Deterministic imports keep AI-generated diffs stable and remove
+				// incidental ordering changes without making organization a lint error.
+				"organizeImports": "on"
+			}
+		}
+	},
+	"linter": {
+		"rules": {
+			"complexity": {
+				// Cognitive complexity 5 is an empirical starting point intended to provide
+				// the same engineering discipline as a McCabe-5 policy, which has served
+				// us very well on another project, not a numerical conversion between
+				// the two metrics.
+				"noExcessiveCognitiveComplexity": {
+					"level": "error",
+					"options": {
+						"maxAllowedComplexity": 5
+					}
+				}
+			},
+			"correctness": {
+				// Stale imports are a common residue of AI-generated refactors and
+				// can hide incomplete changes even when the imported module exists.
+				"noUnusedImports": "error",
+				// Unused bindings are usually dead code left by incomplete changes
+				// or accidental declarations that obscure the intended behavior.
+				"noUnusedVariables": "error",
+				// Unreachable statements obscure control flow and can signal a logic
+				// mistake or incomplete refactor in generated code.
+				"noUnreachable": "error",
+				// Constant conditions can hide a mistaken comparison or misleading
+				// branch that makes the code harder to reason about.
+				"noConstantCondition": "error",
+				// Undeclared references are straightforward incorrect-code hazards
+				// that should be reported before the action can execute.
+				"noUndeclaredVariables": "error",
+				// Runtime source must declare every package it imports instead of
+				// relying on transitive dependencies; devDependencies are not
+				// permitted in checked source or test files.
+				"noUndeclaredDependencies": {
+					"level": "error",
+					"options": {
+						"devDependencies": false
+					}
+				},
+				// Node 24 executes this project's TypeScript as ESM, so relative
+				// imports must name their .ts files instead of relying on extension
+				// resolution.
+				"useImportExtensions": "error"
+			},
+			"suspicious": {
+				// Explicit any disables type checking and can hide invalid assumptions
+				// in AI-produced code; require checked types so the compiler can expose
+				// failures before the action runs.
+				"noExplicitAny": "error",
+				// Circular imports can make module initialization order unclear and
+				// leave exports partially initialized at runtime.
+				"noImportCycles": {
+					"level": "error",
+					"options": {
+						"ignoreTypes": true
+					}
+				},
+				// Unannotated variables can silently evolve into any through
+				// reassignment; require explicit intent so reviewers can detect unsafe
+				// assumptions in generated code.
+				"noEvolvingTypes": "error",
+				// Duplicate object keys silently overwrite earlier values and make
+				// the intended object shape ambiguous.
+				"noDuplicateObjectKeys": "error",
+				// Comparing a value with itself is usually a typo that can conceal a
+				// logic error while appearing to be a meaningful comparison.
+				"noSelfCompare": "error",
+				// Conditions proven redundant add control flow that cannot affect the
+				// result and obscure the actual behavior of the code.
+				"noUnnecessaryConditions": "error",
+				// Async functions without await can return an asynchronous operation
+				// without keeping its failures in the function's intended error path.
+				"useAwait": "error",
+				// Focused tests can silently exclude the rest of the suite and create
+				// false confidence when an AI-generated test leaves `.only` enabled.
+				"noFocusedTests": "error",
+				// Skipped or disabled tests can appear to provide coverage while the
+				// intended behavior is not actually exercised.
+				"noSkippedTests": "error",
+				// Duplicate setup or teardown hooks can make test lifecycle behavior
+				// ambiguous and hide an accidental or misleading test structure.
+				"noDuplicateTestHooks": "error"
+			},
+			"style": {
+				// Non-null assertions override nullability checks and can cause runtime
+				// failures; require control flow or explicit handling so runtime
+				// behavior matches TypeScript's assumptions.
+				"noNonNullAssertion": "error",
+				// Explicit type-only imports prevent a type from being loaded or
+				// confused with a runtime value at the module boundary.
+				"useImportType": "error",
+				// Explicit type-only exports prevent type declarations from being
+				// emitted or confused with runtime exports at the module boundary.
+				"useExportType": "error",
+				// The action runs .ts files directly after erasing types instead of
+				// converting them to .js. Enums cannot be erased, so they cannot be
+				// used in this codebase.
+				"noEnum": "error",
+				// noNamespace is stricter than the requirement for erasable TypeScript because
+				// it does not distinguish runtime namespaces from type-only namespaces. That's
+				// fine for this codebase because the action uses ECMAScript modules instead of
+				// namespaces; ECMAScript modules provide the module mechanism we need while
+				// keeping the source erasable - so forbidding namespaces entirely is the way to go.
+				"noNamespace": "error",
+				// The action is an ESM package, so CommonJS imports and exports
+				// would contradict the module-system decision.
+				"noCommonJs": "error",
+				// The action runs .ts files directly after erasing types instead of converting them to .js. Parameter properties cannot be erased, so they cannot be used in this codebase.
+				"noParameterProperties": "error"
+			},
+			"security": {
+				// Heuristic secret detection helps prevent credentials from being
+				// committed; retain Biome's default entropy threshold.
+				"noSecrets": "error"
+			},
+			"nursery": {
+				// Type assertions can bypass TypeScript's type checking and hide invalid assumptions.
+				"noUnsafeTypeAssertion": "error",
+				// Floating Promises can leave filesystem or GitHub API failures unhandled
+				// and allow asynchronous operations to run out of sequence.
+				"noFloatingPromises": "error",
+				// Promises used as conditions or synchronous callbacks can silently skip
+				// intended asynchronous work, such as ordered API or filesystem operations.
+				"noMisusedPromises": "error",
+				// Implicit function, variable, and parameter types can hide an AI-generated
+				// contract change; require explicit types so reviewers can see intended
+				// assumptions at the declaration.
+				"useExplicitType": "error",
+				// Return annotations wider than the implementation can conceal the precise
+				// contract from callers and make incorrect assumptions harder to detect.
+				"noMisleadingReturnType": "error"
+			}
+		}
+	}
+}
