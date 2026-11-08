@@ -1,0 +1,52 @@
+import type {
+	Example,
+	Rule,
+	Specification,
+	Table,
+} from "./specification-by-example.ts";
+import { expandText } from "./specification-by-example.ts";
+
+function escapePipes(value: string): string {
+	return value.replaceAll("|", "\\|");
+}
+
+function renderTable(table: Table): string {
+	const renderedTable = [
+		`| ${table.headers.map(expandText).map(escapePipes).join(" | ")} |`,
+		`|${table.headers.map(() => "---").join("|")}|`,
+		...table.rows.map(
+			(row) => `| ${row.map(expandText).map(escapePipes).join(" | ")} |`,
+		),
+	].join("\n");
+
+	return table.caption
+		? `${expandText(table.caption)}\n\n${renderedTable}`
+		: renderedTable;
+}
+
+function renderExample(example: Example): string {
+	const content = example.content.map((item) => {
+		if (item.type === "text") {
+			return expandText(item.text);
+		}
+
+		return renderTable(item.table);
+	});
+
+	return ["### Example", ...content].join("\n\n");
+}
+
+function renderRule(rule: Rule): string {
+	return ["## Rule", rule.definition, ...rule.examples.map(renderExample)].join(
+		"\n\n",
+	);
+}
+
+export function renderSpecification(specification: Specification): string {
+	return [
+		`# ${specification.title}`,
+		"---",
+		specification.rules.map(renderRule).join("\n\n---\n\n"),
+		"---",
+	].join("\n\n");
+}
