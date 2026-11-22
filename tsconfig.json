@@ -9,11 +9,21 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "strict": true,
+    "exactOptionalPropertyTypes": true,
     "esModuleInterop": true,
     "types": ["node"],
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "test",
+    "shared",
+    ".github/actions/test-support",
+    ".github/actions/semantic-version-tagger/src",
+    ".github/actions/semantic-version-tagger/test",
+    ".github/actions/semantic-version-calculator/src",
+    ".github/actions/semantic-version-calculator/test"
+  ]
 }

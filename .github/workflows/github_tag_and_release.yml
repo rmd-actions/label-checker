@@ -16,15 +16,24 @@ jobs:
       contents: write
     name: Tag semantic version
     runs-on: ubuntu-22.04
-    outputs:
-      semver: ${{ steps.tag.outputs.tag }}
     steps:
-      - name: Tag
-        uses: K-Phoen/semver-release-action@v1.3.2
-        id: tag
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Calculate version
+        id: calculate-version
+        uses: ./.github/actions/semantic-version-calculator
         with:
-          release_branch: master
-          release_strategy: tag
+          increment: patch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Tag
+        uses: ./.github/actions/semantic-version-tagger
+        with:
+          semantic-version: ${{ steps.calculate-version.outputs.new-semantic-version }}
+          commit: ${{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

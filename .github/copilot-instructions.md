@@ -1,3 +1,8 @@
+# Session start
+
+At the beginning of every Copilot coding session, run `npm ci` before making
+changes or running project checks.
+
 # Validation
 
 ## Test validation
@@ -12,6 +17,9 @@ Before committing, run all supported TypeScript test modes:
 
 Enterprise Server is intentionally virtual-only; do not attempt Enterprise
 Server integration tests.
+
+The semantic-version tagger example runs against a local fake GitHub API:
+`npm run test:semantic-version-tagger`.
 
 ## Biome validation
 
